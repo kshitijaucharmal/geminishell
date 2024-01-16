@@ -1,0 +1,4 @@
+version = "1.0.0"
+
+model = "gemini-pro"
+api_key = "<your api key>"
