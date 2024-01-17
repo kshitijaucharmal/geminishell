@@ -24,7 +24,7 @@ ln -sf "$(pwd)/target/geminishell/geminishell" ~/.local/bin/geminishell
 # Config setup
 if [ ! -f "$HOME/.config/geminishell/config.toml" ]; then
     echo "Config file doesn't exist"
-    echo "Enter API Key: "
+    echo "Enter API Key (https://makersuite.google.com/app/apikey): "
     read GOOGLE_API_KEY
 
     mkdir -p "$HOME/.config/geminishell"
