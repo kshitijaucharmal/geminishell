@@ -7,22 +7,28 @@ arch=('x86_64')
 url="https://github.com/kshitijaucharmal/Gemini-Shell"
 license=('Apache')
 depends=('python>=3.9.0')
-makedepends=('git', 'python-setuptools')
+makedepends=('git')
 source=('$pkgname::git://github.com/kshitijaucharmal/Gemini-Shell')
 md5sums=('SKIP')
 
 build() {
-	cd "$pkgname-$pkgver"
-	./configure --prefix=/usr
-	make
+    cd "$srcdir"
+    python3 -m venv "$pkgname-venv"
+    source "$pkgname-venv/bin/activate"
+
+    pip install -e requirements.txt
+    pip install pyinstaller
+
+    pyinstaller "$pkgname/__main__.py" --clean -n "$pkgname" --distpath target
+    deactivate
+
+    cp -r * "$pkgdir/usr/lib/$pkgname"
 }
 
-check() {
-	cd "$pkgname-$pkgver"
-	make -k check
+package(){
+    mkdir -p "$pkgdir/usr/lib/$pkgname"
 }
 
-package() {
-	cd "$pkgname-$pkgver"
-	make DESTDIR="$pkgdir/" install
+post_package(){
+    install -Dm755 $pkgdir/usr/lib/$pkgname/target/$pkgname/__main__.py /usr/bin/geminishell
 }
