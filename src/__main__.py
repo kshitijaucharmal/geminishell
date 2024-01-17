@@ -148,6 +148,7 @@ def code_mode():
     prompt += "\nMode: code"
     prompt += "\nDon't forget to add a shebang to start of each code block"
     response = model.generate_content(prompt)
+    response.resolve()
     try:
         code = get_code(response.text)
     except Exception as e:
