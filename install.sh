@@ -6,8 +6,8 @@ pip install -r requirements.txt
 pip install pyinstaller
 pyinstaller "src/__main__.py" --clean -n "geminishell" --distpath target
 deactivate
-ln -s target/geminishell/geminishell geminishell
-mkdir -p "$HOME/.config/bardshell"
-cp -rf config.toml "$HOME/.config/bardshell/config.toml"
+ln -s target/geminishell/geminishell ~/.local/bin/geminishell
+mkdir -p "$HOME/.config/geminishell"
+cp -rf config.toml "$HOME/.config/geminishell/config.toml"
 
 rm -r env build geminishell.spec

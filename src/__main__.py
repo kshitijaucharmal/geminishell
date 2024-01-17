@@ -5,7 +5,7 @@ import argparse
 import toml
 import sys
 
-CONFIG_FILE = '~/.config/bardshell/config.toml'
+CONFIG_FILE = '~/.config/geminishell/config.toml'
 
 config = toml.load(os.path.expanduser(CONFIG_FILE))
 parser = argparse.ArgumentParser(
