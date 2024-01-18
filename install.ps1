@@ -1,3 +1,4 @@
+Set-ExecutionPolicy Bypass -Scope Process -Force
 # Install using venv
 If (-not (Test-Path target)) {
     Write-Host "Installing..."
@@ -23,6 +24,9 @@ if ($path -notlike "*$(Get-Location)\target\geminishell*") {
     [Environment]::SetEnvironmentVariable("Path", $path, "User")
     Write-Host "Added to path."
 }
+
+# Add to path
+$env:Path += ";$(Get-Location)\target\geminishell"
 
 # Config setup
 If (-not (Test-Path "$HOME\.config\geminishell\config.toml")) {
