@@ -195,7 +195,7 @@ def text_mode():
             color_text(f'Written to {path}', 'green')
         else:
             color_text('Successfully Aborted', 'green')
-            exit()
+            sys.exit()
 
     sys.exit()
 
