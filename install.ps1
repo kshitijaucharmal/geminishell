@@ -16,8 +16,13 @@ else {
     Write-Host "target exists."
 }
 
-# Add to path
-$env:Path += ";$(Get-Location)\target\geminishell"
+# Permanently add to path
+$path = "$env:Path"
+if ($path -notlike "*$(Get-Location)\target\geminishell*") {
+    $path += ";$(Get-Location)\target\geminishell"
+    [Environment]::SetEnvironmentVariable("Path", $path, "User")
+    Write-Host "Added to path."
+}
 
 # Config setup
 If (-not (Test-Path "$HOME\.config\geminishell\config.toml")) {
