@@ -43,6 +43,11 @@ def interactive_mode():
     while True:
         color_text(">>> ", 'yellow', end='')
         prompt = input()
+        if prompt == 'clear':
+            if os.name == 'nt':
+                os.system('cls')
+            else:
+                os.system('clear')
         if prompt == 'exit':
             break
         response = chat.send_message(prompt, stream=True)
