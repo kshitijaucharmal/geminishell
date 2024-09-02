@@ -1,43 +1,49 @@
-Set-ExecutionPolicy Bypass -Scope Process -Force
 # Install using venv
-If (-not (Test-Path target)) {
+if (-not (Test-Path "target")) {
     Write-Host "Installing..."
     python -m venv env
-    env\Scripts\Activate.ps1
+    .\env\Scripts\Activate.ps1
     pip install -r requirements.txt
     pip install pyinstaller
-    pyinstaller "src/__main__.py" --clean -n "geminishell" --distpath target
-    env\Scripts\Deactivate.ps1
+    pyinstaller "src\__main__.py" --clean -n "geminishell" --distpath target
+    Deactivate
 
     # Remove redundant
-    Remove-Item -Recurse env build geminishell.spec
+    Remove-Item -Recurse -Force env, build, geminishell.spec
     Write-Host "Installed."
-}
-else {
+} else {
     Write-Host "target exists."
 }
 
-# Permanently add to path
-$path = "$env:Path"
-if ($path -notlike "*$(Get-Location)\target\geminishell*") {
-    $path += ";$(Get-Location)\target\geminishell"
-    [Environment]::SetEnvironmentVariable("Path", $path, "User")
-    Write-Host "Added to path."
+# Link to local bin
+Write-Host "Linking to .local/bin"
+$targetPath = "$env:USERPROFILE\.local\bin"
+if (-not (Test-Path $targetPath)) {
+    New-Item -ItemType Directory -Path $targetPath -Force
 }
+$geminishellPath = Join-Path -Path (Get-Location) -ChildPath "target\geminishell\geminishell.exe"
+New-Item -ItemType SymbolicLink -Path "$targetPath\geminishell.exe" -Target $geminishellPath -Force
 
-# Add to path
-$env:Path += ";$(Get-Location)\target\geminishell"
+$URL = "https://makersuite.google.com/app/apikey"
 
 # Config setup
-If (-not (Test-Path "$HOME\.config\geminishell\config.toml")) {
+$configPath = "$env:USERPROFILE\.config\geminishell\config.toml"
+if (-not (Test-Path $configPath)) {
     Write-Host "Config file doesn't exist"
-    Write-Host "Enter API Key (https://makersuite.google.com/app/apikey): "
-    $GOOGLE_API_KEY = Read-Host
+    Write-Host "Please create an API Key and copy-paste it in the terminal"
+    Write-Host "Press `Enter` to open ($URL) in your default web browser."
+    Read-Host
+    Start-Process $URL
+    $GOOGLE_API_KEY = Read-Host "Enter API Key"
 
-    mkdir "$HOME\.config\geminishell"
-    (Get-Content config.toml) -replace '<your api key>', $GOOGLE_API_KEY | Set-Content "$HOME\.config\geminishell\config.toml"
+    $configDir = Split-Path -Parent $configPath
+    if (-not (Test-Path $configDir)) {
+        New-Item -ItemType Directory -Path $configDir -Force
+    }
+    Get-Content "config.toml" | ForEach-Object { $_ -replace "<your api key>", $GOOGLE_API_KEY } | Set-Content $configPath
 
     Write-Host "Created config file"
 }
 
 Write-Host "Done."
+
