@@ -17,9 +17,9 @@ else
     echo "target exists."
 fi
 
-# Link to local bin
-echo "Linking to .local/bin"
-ln -sf "$(pwd)/target/geminishell/geminishell" ~/.local/bin/geminishell
+# Link to /usr/bin for system-wide install
+echo "Linking to /usr/bin"
+sudo ln -sf "$(pwd)/target/geminishell/geminishell" /usr/bin/geminishell
 
 URL="https://makersuite.google.com/app/apikey"
 
