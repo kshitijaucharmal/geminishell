@@ -4,10 +4,37 @@ import os
 import argparse
 import toml
 import sys
+import shutil
+import webbrowser
 
-CONFIG_FILE = '~/.config/geminishell/config.toml'
+CONFIG_DIR = os.path.join(os.getenv("HOME"), ".config", "geminishell")
+CONFIG_FILE = os.path.join(CONFIG_DIR, "config.toml")
+URL = "https://makersuite.google.com/app/apikey"
+
+api_key_placeholder = '<your api key>'
+
+if not os.path.exists(CONFIG_FILE):
+    # Copy default config from /etc if user config doesn't exist
+    os.makedirs(CONFIG_DIR, exist_ok=True)
+    shutil.copy("/etc/geminishell/config.toml", CONFIG_FILE)
+    print("Default config created at:", CONFIG_FILE)
 
 config = toml.load(os.path.expanduser(CONFIG_FILE))
+
+if 'api_key' not in config or not config['api_key']:
+    # Step 3: Prompt user to open browser and get API key
+    print("API key is missing from the configuration.")
+    input(f"Press Enter to open {URL} in your browser...")
+    webbrowser.open(URL)
+
+    api_key = input("Please enter your API key: ")
+    config['api_key'] = api_key
+
+    with open(CONFIG_FILE, 'a') as f:
+        toml.dump(config, f)
+
+    print(f"API key has been saved in: {CONFIG_FILE}")
+
 parser = argparse.ArgumentParser(
 prog='Gemini Shell',
 description='Powerup your terminal with AI',)
