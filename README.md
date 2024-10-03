@@ -26,6 +26,15 @@ chmod +x install.sh
 ./install.sh
 ```
 
+Windows:
+
+To install geminishell:
+```bash
+git clone https://github.com/kshitijaucharmal/geminishell
+cd geminishell
+.\install.ps1
+```
+
 The setup script is very easy to understand, so you can change it to include anything else, or change it to fit your needs :)
 
 ## Using GeminiShell
